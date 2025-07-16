@@ -26,7 +26,7 @@
 - 🔗 Link bebas dikustomisasi  
 - 🖼️ Gambar maskot & header cantik  
 - ⚡ Tanpa database, langsung jalan  
-- 💬 Dibuat dengan HTML, CSS, dan JavaScript  
+- 💬 Dibuat dengan HTML, CSS, dan JavaScript 
 
 ---
 
@@ -34,10 +34,8 @@
 
 - `HTML` untuk struktur  
 - `CSS` untuk desain estetik  
-- `JavaScript` untuk animasi & interaksi  
-- `Typed.js` *(opsional)* untuk animasi teks  
-- `GetLoli` counter untuk jumlah pengunjung  
-- Gambar karakter dari [paimon.moe](https://paimon.moe)
+- `JavaScript` untuk animasi & interaksi
+- `database` edit disini ya guys
 
 ---
 
@@ -50,17 +48,9 @@
 
 ---
 
-## 📷 Preview Desain
-
-<p align="center">
-  <img src="https://i.imgur.com/9PEjUPT.png" width="80%" alt="preview linktree mikorayuki">
-</p>
-
----
-
 ## 🛠️ Customisasi Mudah
 
-- Ganti teks & gambar di `index.html`  
+- Ganti teks & gambar di `datababe.json`  
 - Tambahkan tombol link sebanyak yang kamu mau  
 - Ganti warna, background, atau font sesukamu  
 
@@ -68,7 +58,7 @@
 
 ## 🌐 Contoh Penggunaan
 
-> 🔗 https://mikorayuki.github.io/linktree-theme  
+> 🔗 https://mikorayuki.github.io/linktree  
 > 🎨 Dipakai oleh kreator, PMR sekolah, organisasi & personal brand!
 
 ---
