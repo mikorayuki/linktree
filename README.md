@@ -1,72 +1,54 @@
-<p align="center">
-  <img src="https://paimon.moe/images/characters/full/nahida.png" height="200px" alt="Nahida mascot" />
-</p>
+# Mikorayuki — Interactive Linktree & Music Player
 
-<h1 align="center">🌸 Mikorayuki's Linktree Website</h1>
+![Status](https://img.shields.io/badge/Status-Completed-success?style=for-the-badge)
+![Tech Stack](https://img.shields.io/badge/Stack-HTML5%20%7C%20CSS3%20%7C%20Vanilla%20JS-8a2be2?style=for-the-badge)
 
-<p align="center">
-  <i>A free, aesthetic, and anime-themed personal website like Linktree</i>  
-  <br>
-  <img src="https://img.shields.io/github/stars/mikorayuki/linktree-theme?style=flat-square&color=ffd700" />
-  <img src="https://count.getloli.com/get/@mikorayuki-linktree?theme=moebooru" />
-</p>
+Aplikasi web **Linktree & Music Player** interaktif yang futuristik dan responsif untuk **Mikorayuki**. Aplikasi ini menggabungkan antarmuka UI bergaya *glassmorphism* modern dengan efek animasi partikel canvas, widget musik yang tersinkronisasi dengan lirik karaoke secara real-time, pencarian tautan langsung, serta opsi penggantian tema.
 
 ---
 
-## 🪷 Apa Ini?
+## ✨ Fitur Utama
 
-**Mikorayuki's Linktree Website** adalah template gratis untuk menampilkan semua link sosial mediamu dalam satu halaman bergaya anime dan estetik — cocok untuk profil Instagram, TikTok, GitHub, dan lainnya.
-
----
-
-## 🌟 Fitur Utama
-
-- 🎀 Desain anime-style estetik  
-- 📱 Responsif untuk mobile & desktop  
-- 🔗 Link bebas dikustomisasi  
-- 🖼️ Gambar maskot & header cantik  
-- ⚡ Tanpa database, langsung jalan  
-- 💬 Dibuat dengan HTML, CSS, dan JavaScript 
+- **🎨 Modern Glassmorphism UI:** Desain antarmuka kaca transparan dengan efek blur tinggi, border neon halus, dan kartu profil yang responsif.
+- **✨ Animated Particle Canvas:** Latar belakang partikel melayang yang dirender murni menggunakan HTML5 Canvas.
+- **🎵 Music Player & Lirik Karaoke:** Widget pemutar musik bawaan yang dilengkapi lirik lagu yang otomatis bergerak seirama dengan detiks audio (`timeSync`).
+- **🔍 Pencarian Tautan Real-time:** Fitur pencarian instan untuk menyaring tautan media sosial dan portofolio secara cepat.
+- **📋 Salin Tautan Instan:** Tombol *copy link* pada setiap kartu tautan disertai notifikasi toast melayang.
+- **🎨 Opsi Tema Waktu Nyata:** Pilihan tema antarmuka (*Dark Glass*, *Sakura Pink*, dan *Cyber Neon*).
+- **📱 Responsif Total:** Pengalaman pengguna yang mulus pada perangkat ponsel pintar, tablet, maupun desktop.
+- **⚙️ Konfigurasi JSON Terpusat:** Pengaturan profil, daftar tautan, dan data lirik musik tersimpan dalam file `data.json`.
 
 ---
 
-## 🧩 Teknologi yang Dipakai
+## 🛠️ Teknologi yang Digunakan
 
-- `HTML` untuk struktur  
-- `CSS` untuk desain estetik  
-- `JavaScript` untuk animasi & interaksi
-- `database` edit disini ya guys
-
----
-
-## 🧪 Cara Pakai
-
-1. **Fork** repo ini / unduh ZIP-nya  
-2. Edit file `index.html` sesuai nama dan link kamu  
-3. Upload ke GitHub Pages, Vercel, atau hosting favoritmu  
-4. Akses websitemu dan pasang link di bio!
+- **HTML5:** Struktur utama antarmuka dan canvas 2D.
+- **CSS3:** Variabel CSS, animasi keyframe, glassmorphism, dan tata letak flexbox/grid.
+- **Vanilla JavaScript (ES6+):** Logika sinkronisasi audio, filter pencarian, pengubah tema, dan efek partikel.
+- **FontAwesome 6.5:** Ikon antarmuka dan media sosial.
+- **Google Fonts (Outfit & JetBrains Mono):** Tipografi modern dan bersih.
 
 ---
 
-## 🛠️ Customisasi Mudah
+## 📁 Struktur Direktori
 
-- Ganti teks & gambar di `datababe.json`  
-- Tambahkan tombol link sebanyak yang kamu mau  
-- Ganti warna, background, atau font sesukamu  
+```text
+linktree/
+├── index.html     # Kerangka utama halaman HTML
+├── styles.css     # Desain sistem Glassmorphism & Animasi
+├── script.js      # Engine interaktivitas, partikel, & pemutar audio
+├── data.json      # Konfigurasi data profil, tautan, & lirik lagu
+├── LICENSE        # Lisensi lisensi terbuka
+└── README.md      # Dokumentasi proyek
+```
 
 ---
 
-## 🌐 Contoh Penggunaan
+## 🚀 Cara Menjalankan
 
-> 🔗 https://mikorayuki.github.io/linktree  
-> 🎨 Dipakai oleh kreator, PMR sekolah, organisasi & personal brand!
-
----
-
-<p align="center">
-  Dibuat dengan 💖 oleh <b>@mikorayuki</b>
-</p>
-
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=100&section=footer"/>
-</p>
+1. Clone repositori ini:
+   ```bash
+   git clone https://github.com/mikorayuki/linktree.git
+   ```
+2. Buka file `index.html` menggunakan browser pilihan Anda, atau jalankan melalui web server lokal (seperti Live Server).
+3. Untuk mengubah tautan atau musik, perbarui data pada file `data.json`.

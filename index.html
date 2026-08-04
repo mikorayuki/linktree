@@ -1,74 +1,142 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>linkwebmikorayuki</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <title>Mikorayuki — Digital Creator & Link Hub</title>
+
+    <meta name="description" content="Linktree & Portofolio resmi Mikorayuki. Temukan tautan media sosial, proyek, dan karya digital terbaru.">
+    <meta name="keywords" content="mikorayuki, linktree, portofolio, zulfan fuadi, yuki">
+    <meta name="author" content="Mikorayuki">
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Mikorayuki — Link Hub">
+    <meta property="og:description" content="Official link hub and digital creator showcase for Mikorayuki.">
+    <meta property="og:image" content="https://files.catbox.moe/ikfxwg.jpg">
+
+    <link rel="icon" href="https://files.catbox.moe/ikfxwg.jpg" type="image/jpeg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <canvas id="bg-canvas"></canvas>
+
     <div class="welcome-panel" id="welcomePanel">
-        <div class="welcome-content animate__animated animate__fadeIn">
-            <div class="welcome-icon">
-                <i class="fas fa-hand-sparkles"></i>
+        <div class="welcome-card">
+            <div class="welcome-avatar-wrap">
+                <img src="https://files.catbox.moe/ikfxwg.jpg" alt="Avatar" class="welcome-avatar">
+                <div class="welcome-sparkle"><i class="fas fa-sparkles"></i></div>
             </div>
-            <h2>💫welcome to my website💫</h2>
-            <p>terimakasih telah berkunjung di website mikorayuki</p>
-            <button id="welcomeCloseBtn">Get Started</button>
+            <h2>Selamat Datang ✨</h2>
+            <p>Terima kasih telah berkunjung di portal link resmi Mikorayuki.</p>
+            <button id="welcomeCloseBtn" class="btn-start">
+                <span>Eksplorasi Sekarang</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
         </div>
     </div>
 
-    <div class="container animate__animated animate__fadeIn animate__delay-1s">
-        <div class="profile">
-            <div class="profile-pic-container">
-                <img src="" alt="Profile Picture" class="profile-pic" id="profilePic">
-            </div>
-            <h1 class="profile-name animate__animated animate__fadeInUp animate__delay-1s" id="profileName">mikorayuki</h1>
-            <p class="profile-bio animate__animated animate__fadeInUp animate__delay-1s biotext" id="profileBio">sebentar loading bio</p>
-        </div>
-        
-        <div class="links-container" id="linksContainer">
-            <!-- Links will be added here from JSON data -->
-        </div>
-        
-        <div class="footer animate__animated animate__fadeInUp animate__delay-2s">
-            &copy; <span id="currentYear"></span> <a class="footercopy" href="https://mikoryuki.my.id">mikorayuki</a>
-        </div>
+    <div class="toast-notification" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMsg">Link berhasil disalin!</span>
     </div>
-    
-    <div class="music-player" id="musicPlayer">
-        <button class="music-toggle" id="musicToggle">
+
+    <div class="app-wrapper">
+        <header class="top-nav">
+            <div class="theme-switcher">
+                <button class="theme-btn active" data-theme="dark" title="Dark Glass"><i class="fas fa-moon"></i></button>
+                <button class="theme-btn" data-theme="sakura" title="Sakura Pink"><i class="fas fa-flower"></i></button>
+
+                <button class="theme-btn" data-theme="cyber" title="Cyber Neon"><i class="fas fa-bolt"></i></button>
+            </div>
+            <div class="nav-actions">
+                <button class="action-icon-btn" id="shareBtn" title="Bagikan Profile"><i class="fas fa-share-alt"></i></button>
+            </div>
+        </header>
+
+        <main class="profile-card">
+            <div class="avatar-container">
+                <div class="avatar-ring"></div>
+                <img src="" alt="Mikorayuki Avatar" class="profile-avatar" id="profilePic">
+                <div class="status-badge" title="Online & Available">
+                    <span class="status-dot"></span>
+                </div>
+            </div>
+
+            <h1 class="profile-title" id="profileName">Mikorayuki</h1>
+            <div class="profile-tag">
+                <span class="badge"><i class="fas fa-code"></i> Developer</span>
+                <span class="badge"><i class="fas fa-palette"></i> Creator</span>
+            </div>
+            <p class="profile-bio" id="profileBio">Loading bio...</p>
+
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="linkSearch" placeholder="Cari tautan..." autocomplete="off">
+            </div>
+
+            <div class="links-list" id="linksContainer"></div>
+
+            <footer class="profile-footer">
+                <p>© <span id="currentYear"></span> <a href="https://mikorayuki.my.id" target="_blank" class="footer-link">Mikorayuki</a> · All Rights Reserved</p>
+            </footer>
+        </main>
+    </div>
+
+    <div class="music-widget" id="musicPlayer">
+        <button class="music-toggle-btn" id="musicToggle" title="Toggle Player">
             <i class="fas fa-music"></i>
+            <span class="eq-bars">
+                <span></span><span></span><span></span>
+            </span>
         </button>
-        <div class="music-header">
-            <img src="" alt="Album Art" class="album-art" id="albumArt">
-            <div class="music-info">
-                <div class="song-title" id="songTitle">Song Title</div>
-                <div class="artist" id="artist">Artist Name</div>
-                <div class="lyrics-wrapper">
-                    <div class="lyrics-container">
-                        <div class="lyrics" id="lyrics">
-                            <!-- Lyrics will be displayed here -->
-                        </div>
+
+        <div class="music-card-inner">
+            <div class="music-header">
+                <div class="album-art-wrap">
+                    <img src="" alt="Album Art" id="albumArt" class="album-art">
+                    <div class="vinyl-overlay"></div>
+                </div>
+                <div class="song-meta">
+                    <h4 class="song-title" id="songTitle">Song Title</h4>
+                    <p class="song-artist" id="artist">Artist Name</p>
+                    <div class="lyrics-box">
+                        <div class="lyrics-line" id="lyrics">Lirik musik akan muncul di sini...</div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="music-controls">
-            <button class="play-pause" id="playPauseBtn">
-                <i class="fas fa-play" id="playPauseIcon"></i>
-            </button>
-            <div class="progress-container">
-                <div class="progress-bar" id="progressBar"></div>
+
+            <div class="music-controls">
+                <div class="progress-wrap" id="progressContainer">
+                    <div class="progress-fill" id="progressBar"></div>
+                </div>
+                <div class="control-bar">
+                    <span class="time-stamp" id="currentTime">0:00</span>
+                    <button class="play-btn" id="playPauseBtn">
+                        <i class="fas fa-play" id="playPauseIcon"></i>
+                    </button>
+                    <span class="time-stamp" id="totalTime">0:00</span>
+                </div>
             </div>
-            <div class="time-display">
-                <span id="currentTime">0:00</span> / <span id="totalTime">0:00</span>
-            </div>
         </div>
-        
+
         <audio id="audioPlayer" preload="metadata"></audio>
+    </div>
+
+    <div class="qr-modal" id="qrModal">
+        <div class="modal-card">
+            <button class="modal-close" id="qrCloseBtn">&times;</button>
+            <div class="qr-icon-wrap"><i class="fas fa-qrcode"></i></div>
+            <h3>Bagikan Profil</h3>
+            <p>Scan atau salin tautan berikut untuk membagikan halaman ini:</p>
+            <div class="url-copy-box">
+                <input type="text" readonly id="shareUrlInput" value="https://mikorayuki.my.id">
+                <button id="copyShareUrlBtn"><i class="fas fa-copy"></i> Salin</button>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>

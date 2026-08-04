@@ -1,4 +1,3 @@
-// Menemukan script.js yang diperbaiki untuk menampilkan lirik
 let userData = null;
 let currentLyricIndex = -1;
 let songDuration = 60;
@@ -24,14 +23,82 @@ const totalTimeDisplay = document.getElementById('totalTime');
 const welcomePanel = document.getElementById('welcomePanel');
 const welcomeCloseBtn = document.getElementById('welcomeCloseBtn');
 const audioPlayer = document.getElementById('audioPlayer');
+const toast = document.getElementById('toast');
+const toastMsg = document.getElementById('toastMsg');
+const linkSearch = document.getElementById('linkSearch');
+const qrModal = document.getElementById('qrModal');
+const shareBtn = document.getElementById('shareBtn');
+const qrCloseBtn = document.getElementById('qrCloseBtn');
+const copyShareUrlBtn = document.getElementById('copyShareUrlBtn');
+const shareUrlInput = document.getElementById('shareUrlInput');
+
+function initCanvasBackground() {
+    const canvas = document.getElementById('bg-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const count = 40;
+
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 2 + 1,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            alpha: Math.random() * 0.5 + 0.2
+        });
+    }
+
+    function render() {
+        ctx.clearRect(0, 0, width, height);
+
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            if (p.x < 0) p.x = width;
+            if (p.x > width) p.x = 0;
+            if (p.y < 0) p.y = height;
+            if (p.y > height) p.y = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 0, 127, ${p.alpha})`;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#ff007f';
+            ctx.fill();
+        });
+
+        requestAnimationFrame(render);
+    }
+    render();
+}
+
+function showToast(msg) {
+    toastMsg.textContent = msg;
+    toast.classList.add('active');
+    setTimeout(() => {
+        toast.classList.remove('active');
+    }, 3000);
+}
 
 function checkWelcomePanel() {
-    const lastVisit = localStorage.getItem('lastVisit');
+    const lastVisit = localStorage.getItem('lastVisit_mikorayuki');
     const currentTime = new Date().getTime();
-    
-    if (!lastVisit || (currentTime - lastVisit) > 60000) { 
+
+    if (!lastVisit || (currentTime - parseInt(lastVisit)) > 300000) {
         welcomePanel.classList.add('visible');
-        localStorage.setItem('lastVisit', currentTime);
+        localStorage.setItem('lastVisit_mikorayuki', currentTime.toString());
     }
 }
 
@@ -39,51 +106,80 @@ welcomeCloseBtn.addEventListener('click', () => {
     welcomePanel.classList.remove('visible');
 });
 
-function getAverageColor(imageElement, callback) {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
+function initThemeSwitcher() {
+    const btns = document.querySelectorAll('.theme-btn');
+    btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const theme = btn.getAttribute('data-theme');
+            if (theme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+            } else {
+                document.documentElement.setAttribute('data-theme', theme);
+            }
+        });
+    });
+}
 
-    if (!imageElement.complete) {
-        imageElement.onload = function() {
-            extractColor();
-        };
-    } else {
-        extractColor();
-    }
+function renderLinks(links) {
+    linksContainer.innerHTML = '';
 
-    function extractColor() {
-        canvas.width = imageElement.width;
-        canvas.height = imageElement.height;
-        context.drawImage(imageElement, 0, 0, canvas.width, canvas.height);
-        
-        const imageData = context.getImageData(0, 0, canvas.width, canvas.height).data;
-        let r = 0, g = 0, b = 0;
-        let pixelCount = 0;
-        
-        for (let i = 0; i < imageData.length; i += 4) {
-            r += imageData[i];
-            g += imageData[i + 1];
-            b += imageData[i + 2];
-            pixelCount++;
-        }
-        
-        r = Math.floor(r / pixelCount);
-        g = Math.floor(g / pixelCount);
-        b = Math.floor(b / pixelCount);
-        
-        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
-        const textColor = brightness > 128 ? '33, 33, 33' : '255, 255, 255';
-        
-        const bgColor = `rgba(${r}, ${g}, ${b}, 0.15)`;
+    links.forEach((link) => {
+        const card = document.createElement('a');
+        card.href = link.url;
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
+        card.className = 'link-card';
 
-        const hue1 = Math.floor(Math.random() * 360);
-        const hue2 = (hue1 + 180) % 360;
+        const left = document.createElement('div');
+        left.className = 'link-card-left';
 
-        const primaryColor = `hsl(${hue1}, 70%, 50%)`;
-        const secondaryColor = `hsl(${hue2}, 70%, 50%)`;
+        const iconWrap = document.createElement('div');
+        iconWrap.className = 'link-icon-wrap';
+        const icon = document.createElement('i');
+        icon.className = link.icon;
+        iconWrap.appendChild(icon);
 
-        callback(bgColor, `rgb(${textColor})`, textColor, primaryColor, secondaryColor);
-    }
+        const textWrap = document.createElement('div');
+        textWrap.className = 'link-card-text';
+        const h3 = document.createElement('h3');
+        h3.textContent = link.title;
+        const p = document.createElement('p');
+        p.textContent = link.url.replace(/^https?:\/\//, '');
+
+        textWrap.appendChild(h3);
+        textWrap.appendChild(p);
+
+        left.appendChild(iconWrap);
+        left.appendChild(textWrap);
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.title = 'Salin Tautan';
+        copyBtn.innerHTML = '<i class="far fa-copy"></i>';
+
+        copyBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigator.clipboard.writeText(link.url).then(() => {
+                showToast(`Tautan ${link.title} berhasil disalin!`);
+            });
+        });
+
+        card.appendChild(left);
+        card.appendChild(copyBtn);
+
+        linksContainer.appendChild(card);
+    });
+}
+
+function initSearch(links) {
+    linkSearch.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        const filtered = links.filter(l => l.title.toLowerCase().includes(query) || l.url.toLowerCase().includes(query));
+        renderLinks(filtered);
+    });
 }
 
 function initializeFromJSON(data) {
@@ -92,54 +188,23 @@ function initializeFromJSON(data) {
     profileName.textContent = data.profile.name;
     profileBio.textContent = data.profile.bio;
     profilePic.src = data.profile.image;
-    
-    profilePic.onload = function() {
-        getAverageColor(profilePic, (bgColor, textColor, textColorRgb, primaryColor, secondaryColor) => {
-            document.body.style.backgroundColor = bgColor;
-            document.documentElement.style.setProperty('--bg-color', bgColor);
-            document.documentElement.style.setProperty('--text-color', textColor);
-            document.documentElement.style.setProperty('--text-color-rgb', textColorRgb);
-            document.documentElement.style.setProperty('--primary-color', primaryColor);
-            document.documentElement.style.setProperty('--secondary-color', secondaryColor);
-        });
-    };
-    
 
-    linksContainer.innerHTML = '';
-    
-    data.links.forEach((link, index) => {
-        const linkElement = document.createElement('a');
-        linkElement.href = link.url;
-        linkElement.className = 'link-item animate-link';
-        linkElement.style.animationDelay = `${0.1 * (index + 1)}s`;
-        linkElement.target = '_blank';
-        linkElement.rel = 'noopener noreferrer';
-        
-        const icon = document.createElement('i');
-        icon.className = link.icon;
-        
-        const text = document.createTextNode(link.title);
-        
-        linkElement.appendChild(icon);
-        linkElement.appendChild(text);
-        
-        linksContainer.appendChild(linkElement);
-    });
-    
+    renderLinks(data.links);
+    initSearch(data.links);
 
     songTitle.textContent = data.music.title;
     artist.textContent = data.music.artist;
     albumArt.src = data.music.albumArt;
-    
+
     if (data.music.audioFile) {
         audioPlayer.src = data.music.audioFile;
-        
-        audioPlayer.addEventListener('loadedmetadata', function() {
+
+        audioPlayer.addEventListener('loadedmetadata', function () {
             songDuration = audioPlayer.duration;
             totalTimeDisplay.textContent = formatTime(songDuration);
         });
 
-        audioPlayer.addEventListener('timeupdate', function() {
+        audioPlayer.addEventListener('timeupdate', function () {
             currentTimeDisplay.textContent = formatTime(audioPlayer.currentTime);
             const percent = (audioPlayer.currentTime / songDuration) * 100;
             progressBar.style.width = `${percent}%`;
@@ -147,44 +212,39 @@ function initializeFromJSON(data) {
             updateLyricsDisplay(audioPlayer.currentTime);
         });
 
-        audioPlayer.addEventListener('ended', function() {
+        audioPlayer.addEventListener('ended', function () {
             audioPlayer.currentTime = 0;
             if (isPlaying) {
                 audioPlayer.play();
             } else {
                 isPlaying = false;
                 playPauseIcon.className = 'fas fa-play';
+                musicPlayer.classList.remove('playing');
             }
         });
     } else {
-        songDuration = data.music.duration || 60;
+        songDuration = data.music.duration || 267;
         totalTimeDisplay.textContent = formatTime(songDuration);
     }
-    
-    // PERBAIKAN: Periksa format timeSync dan pastikan kita mengakses elemen dengan benar
+
     if (data.music.timeSync) {
-        console.log("Lyrics data loaded:", data.music.timeSync);
         updateLyricsDisplay(0);
-    } else {
-       lyrics.textContent = data.music.lyrics || "No lyrics available";
     }
-    currentYear.textContent = new Date().getFullYear();
+
+    currentYear.textContent = new Date().getFullYear().toString();
 }
 
 function updateLyricsDisplay(time) {
     if (!userData || !userData.music.timeSync) return;
 
-    // PERBAIKAN: Deteksi dan tangani format yang ada di data.json
-    // Jika timeSync adalah array dalam array, ambil array pertama
     let lyricArray = userData.music.timeSync;
     if (Array.isArray(lyricArray) && lyricArray.length > 0 && Array.isArray(lyricArray[0])) {
         lyricArray = lyricArray[0];
-        console.log("Detected nested array format, using first array:", lyricArray.length, "items");
     }
 
     let currentLyric = null;
     let newLyricIndex = -1;
-    
+
     for (let i = 0; i < lyricArray.length; i++) {
         if (lyricArray[i].time <= time) {
             currentLyric = lyricArray[i];
@@ -196,19 +256,7 @@ function updateLyricsDisplay(time) {
 
     if (currentLyric && newLyricIndex !== currentLyricIndex) {
         currentLyricIndex = newLyricIndex;
-        
-        lyrics.innerHTML = '';
-        
-        const lyricLine = document.createElement('div');
-        lyricLine.className = 'lyrics-line active';
-        lyricLine.textContent = currentLyric.text;
-        
-        lyrics.appendChild(lyricLine);
-        
-        lyricLine.classList.add('lyrics-fade-in');
-        setTimeout(() => {
-            lyricLine.classList.remove('lyrics-fade-in');
-        }, 500);
+        lyrics.textContent = currentLyric.text;
     }
 }
 
@@ -220,14 +268,16 @@ function formatTime(seconds) {
 
 function togglePlayPause() {
     isPlaying = !isPlaying;
-    
+
     if (isPlaying) {
         playPauseIcon.className = 'fas fa-pause';
+        musicPlayer.classList.add('playing');
         if (audioPlayer.src) {
             audioPlayer.play();
         }
     } else {
         playPauseIcon.className = 'fas fa-play';
+        musicPlayer.classList.remove('playing');
         if (audioPlayer.src) {
             audioPlayer.pause();
         }
@@ -235,7 +285,7 @@ function togglePlayPause() {
 }
 
 musicToggle.addEventListener('click', () => {
-    musicPlayer.classList.toggle('hidden');
+    musicPlayer.classList.toggle('collapsed');
 });
 
 playPauseBtn.addEventListener('click', (event) => {
@@ -243,19 +293,33 @@ playPauseBtn.addEventListener('click', (event) => {
     togglePlayPause();
 });
 
-document.querySelector('.progress-container').addEventListener('click', function(e) {
+document.getElementById('progressContainer').addEventListener('click', function (e) {
     if (audioPlayer.src) {
-        const progressContainer = this;
-        const rect = progressContainer.getBoundingClientRect();
+        const rect = this.getBoundingClientRect();
         const percent = (e.clientX - rect.left) / rect.width;
         audioPlayer.currentTime = percent * songDuration;
     }
 });
 
+shareBtn.addEventListener('click', () => {
+    shareUrlInput.value = window.location.href;
+    qrModal.classList.add('visible');
+});
+
+qrCloseBtn.addEventListener('click', () => {
+    qrModal.classList.remove('visible');
+});
+
+copyShareUrlBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(shareUrlInput.value).then(() => {
+        showToast('Tautan profil berhasil disalin!');
+        qrModal.classList.remove('visible');
+    });
+});
+
 document.addEventListener('click', function playOnFirstInteraction() {
     if (isFirstInteraction) {
         isFirstInteraction = false;
-        // Start playing music
         if (!isPlaying) {
             togglePlayPause();
         }
@@ -263,16 +327,14 @@ document.addEventListener('click', function playOnFirstInteraction() {
     }
 }, true);
 
-
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    initCanvasBackground();
+    initThemeSwitcher();
     checkWelcomePanel();
-    
-    currentLyricIndex = -1; 
-    
+
     fetch('data.json')
         .then(response => response.json())
         .then(data => {
-            console.log("Data loaded successfully:", data);
             initializeFromJSON(data);
         })
         .catch(error => {
